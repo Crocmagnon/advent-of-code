@@ -3,7 +3,10 @@ NUMBER_OF_PARAMS_MAP = {
     2: 3,
     3: 1,
     4: 1,
-    99: 0,
+    5: 2,
+    6: 2,
+    7: 3,
+    8: 3,
 }
 
 LAST_IS_RESULT_MAP = {
@@ -11,6 +14,10 @@ LAST_IS_RESULT_MAP = {
     2: True,
     3: True,
     4: False,
+    5: False,
+    6: False,
+    7: True,
+    8: True,
 }
 
 
@@ -62,10 +69,32 @@ def compute(lst):
             program[params[2]] = params[0] * params[1]
         elif code == 3:
             # Input
-            program[params[0]] = int(input(f"Input for instruction {pointer}"))
+            program[params[0]] = int(input(f"Input for instruction {pointer}\n> "))
         elif code == 4:
             # Output
             print(params[0])
+        elif code == 5:
+            # Jump if true
+            if params[0] != 0:
+                pointer = params[1]
+                pointer_moved = True
+        elif code == 6:
+            # Jump if false
+            if params[0] == 0:
+                pointer = params[1]
+                pointer_moved = True
+        elif code == 7:
+            # Less than
+            if params[0] < params[1]:
+                program[params[2]] = 1
+            else:
+                program[params[2]] = 0
+        elif code == 8:
+            # Equals
+            if params[0] == params[1]:
+                program[params[2]] = 1
+            else:
+                program[params[2]] = 0
 
         else:
             raise ValueError(f"Something bad happened, code={code}")
