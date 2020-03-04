@@ -5,11 +5,11 @@ import math
 def already_seen_on_others(seen, wire, position):
     for key, value in seen.items():
         if key != wire and position in value:
-            return True
-    return False
+            return value[position]
+    return None
 
 
-def distance(position):
+def distance(seen, position, wire_length):
     return int(math.fabs(position[0]) + math.fabs(position[1]))
 
 
@@ -18,9 +18,10 @@ def main():
         raw = f.read()
 
     distances = set()
-    seen_positions = collections.defaultdict(set)
+    seen_positions = collections.defaultdict(dict)
     for wire, line in enumerate(raw.split()):
         x, y = 0, 0
+        wire_length = 0
         for segment in line.split(","):
             direction = segment[0]
             length = int(segment[1:])
@@ -35,11 +36,13 @@ def main():
                     y -= 1
                 else:
                     raise ValueError(f"Unknown direction: {direction}")
+                wire_length += 1
                 position = (x, y)
-                seen_positions[wire].add(position)
-                if already_seen_on_others(seen_positions, wire, position):
-                    d = distance(position)
-                    distances.add(distance(position))
+                if position not in seen_positions[wire]:
+                    seen_positions[wire][position] = wire_length
+                steps = already_seen_on_others(seen_positions, wire, position)
+                if steps:
+                    distances.add(steps + seen_positions[wire][position])
 
     print(min(distances))
             
