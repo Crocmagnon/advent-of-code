@@ -1,12 +1,23 @@
 def matches(num):
-    previous = ""
     two_adjacents = False
-    for digit in str(num):
-        if digit == previous:
+    num = str(num)
+    i = 0
+    while i < len(num):
+        current = num[i]
+        previous = ""
+        before_previous = ""
+        next_ = ""
+        if i > 0:
+            previous = num[i - 1]
+        if i > 1:
+            before_previous = num[i - 2]
+        if i < len(num) - 1:
+            next_ = num[i + 1]
+        if current == previous and current != before_previous and current != next_:
             two_adjacents = True
-        if digit < previous:
+        if current < previous:
             return 0
-        previous = digit
+        i += 1
 
     return 1 if two_adjacents else 0
 
