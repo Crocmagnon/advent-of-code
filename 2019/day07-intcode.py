@@ -24,111 +24,159 @@ LAST_IS_RESULT_MAP = {
 }
 
 
+class IntcodeOutput(Exception):
+    def __init__(self, value):
+        self.value = value
+
+
 class Computer:
-    @staticmethod
-    def get_value(program, args, param_modes, index):
+    def get_value(self, args, param_modes, index):
         if param_modes[index] == 0:
-            return program[args[index]]
+            return self.program[args[index]]
         return args[index]
 
-    @staticmethod
-    def parse_args(program, raw_args, param_modes, last_is_result=False):
+    def parse_args(self, raw_args, param_modes, last_is_result=False):
         args = []
         limit = -1 if last_is_result else None
         for i, arg in enumerate(raw_args[:limit]):
-            args.append(Computer.get_value(program, raw_args, param_modes, i))
+            args.append(self.get_value(raw_args, param_modes, i))
         if last_is_result:
             args.append(raw_args[-1])
         return args
 
+    def _move_pointer(self, position):
+        self.pointer = position
+        self.pointer_moved = True
+
+    def _update_pointer(self):
+        offset = self.get_offset()
+        if not self.pointer_moved:
+            self.pointer += offset
+        self.pointer_moved = False
+
     def __init__(self, initial_program: List[int], inputs: List[int] = None):
         self.program = initial_program.copy()  # type: List[int]
         self.inputs = inputs.copy()  # type: List[int]
+        self.pointer = 0
+        self.pointer_moved = False
 
-    def compute(self, inputs: List[int] = None) -> Union[int, None]:
-        if inputs is None:
-            inputs = []
-        self.inputs.extend(inputs)
+    def compute(self, additional_inputs: List[int] = None) -> int:
+        if additional_inputs is None:
+            additional_inputs = []
+        self.inputs.extend(additional_inputs)
 
-        pointer = 0
-        while pointer < len(self.program):
-            pointer_moved = False
-            instruction = str(self.program[pointer])
-            code = int(instruction[-2:])
-            if code == 99:
-                raise
+        while self.pointer < len(self.program):
+            try:
+                self.handle_operation()
+            except IntcodeOutput as e:
+                return e.value
+            finally:
+                self._update_pointer()
 
-            number_of_params = NUMBER_OF_PARAMS_MAP[code]
-            offset = number_of_params + 1
-            param_modes = instruction[:-2]
-            param_modes = param_modes.zfill(number_of_params)
-            param_modes = list(map(int, reversed(param_modes)))
-            raw_params = []
-            for i in range(1, offset):
-                raw_params.append(self.program[pointer + i])
+    def get_params(self):
+        offset = self.get_offset()
+        param_modes = self.get_instruction()[:-2]
+        param_modes = param_modes.zfill(offset - 1)
+        param_modes = list(map(int, reversed(param_modes)))
+        raw_params = []
+        for i in range(1, offset):
+            raw_params.append(self.program[self.pointer + i])
 
-            last_is_result = LAST_IS_RESULT_MAP[code]
-            params = self.parse_args(
-                self.program, raw_params, param_modes, last_is_result
-            )
+        code = self.get_code()
+        last_is_result = LAST_IS_RESULT_MAP[code]
+        params = self.parse_args(raw_params, param_modes, last_is_result)
+        return params
 
-            if code == 1:
-                # Addition
-                self.program[params[2]] = params[0] + params[1]
-            elif code == 2:
-                # Multiplication
-                self.program[params[2]] = params[0] * params[1]
-            elif code == 3:
-                # Input
-                try:
-                    input_value = int(self.inputs.pop(0))
-                except IndexError:
-                    input_value = int(input(f"Input for instruction {pointer}\n> "))
-                self.program[params[0]] = input_value
-            elif code == 4:
-                # Output
-                return params[0]
-            elif code == 5:
-                # Jump if true
-                if params[0] != 0:
-                    pointer = params[1]
-                    pointer_moved = True
-            elif code == 6:
-                # Jump if false
-                if params[0] == 0:
-                    pointer = params[1]
-                    pointer_moved = True
-            elif code == 7:
-                # Less than
-                if params[0] < params[1]:
-                    self.program[params[2]] = 1
-                else:
-                    self.program[params[2]] = 0
-            elif code == 8:
-                # Equals
-                if params[0] == params[1]:
-                    self.program[params[2]] = 1
-                else:
-                    self.program[params[2]] = 0
+    def get_offset(self):
+        code = self.get_code()
+        number_of_params = NUMBER_OF_PARAMS_MAP[code]
+        return number_of_params + 1
 
-            else:
-                raise ValueError(f"Something bad happened, code={code}")
+    def get_code(self):
+        instruction = self.get_instruction()
+        code = int(instruction[-2:])
+        if code == 99:
+            raise StopIteration
+        return code
 
-            if not pointer_moved:
-                pointer += offset
+    def get_instruction(self):
+        instruction = str(self.program[self.pointer])
+        return instruction
+
+    def handle_operation(self):
+        code = self.get_code()
+        params = self.get_params()
+        if code == 1:
+            self.handle_addition(params)
+        elif code == 2:
+            self.handle_multiplication(params)
+        elif code == 3:
+            self.handle_input(params)
+        elif code == 4:
+            # Output
+            raise IntcodeOutput(params[0])
+        elif code == 5:
+            self.handle_jump_if_true(params)
+        elif code == 6:
+            self.handle_jump_if_false(params)
+        elif code == 7:
+            self.handle_less_than(params)
+        elif code == 8:
+            self.handle_equals(params)
+        else:
+            raise ValueError(f"Something bad happened, code={code}")
+
+    def handle_addition(self, params):
+        self.program[params[2]] = params[0] + params[1]
+
+    def handle_multiplication(self, params):
+        self.program[params[2]] = params[0] * params[1]
+
+    def handle_input(self, params):
+        self.program[params[0]] = int(self.inputs.pop(0))
+
+    def handle_jump_if_true(self, params):
+        if params[0] != 0:
+            self._move_pointer(params[1])
+
+    def handle_jump_if_false(self, params):
+        if params[0] == 0:
+            self._move_pointer(params[1])
+
+    def handle_equals(self, params):
+        if params[0] == params[1]:
+            self.program[params[2]] = 1
+        else:
+            self.program[params[2]] = 0
+
+    def handle_less_than(self, params):
+        if params[0] < params[1]:
+            self.program[params[2]] = 1
+        else:
+            self.program[params[2]] = 0
 
 
 def main():
     with open("inputs/day07") as input_file:
         original_program = list(map(int, input_file.read().split(",")))
     values = set()
-    for phase in itertools.permutations("01234"):
-        amp1 = Computer(original_program, [int(phase[0])]).compute([0])
-        amp2 = Computer(original_program, [int(phase[1])]).compute([amp1])
-        amp3 = Computer(original_program, [int(phase[2])]).compute([amp2])
-        amp4 = Computer(original_program, [int(phase[3])]).compute([amp3])
-        amp5 = Computer(original_program, [int(phase[4])]).compute([amp4])
-        values.add(amp5)
+    for phase in itertools.permutations("56789"):
+        amp1 = Computer(original_program, [int(phase[0])])
+        amp2 = Computer(original_program, [int(phase[1])])
+        amp3 = Computer(original_program, [int(phase[2])])
+        amp4 = Computer(original_program, [int(phase[3])])
+        amp5 = Computer(original_program, [int(phase[4])])
+        signal = 0
+        while True:
+            try:
+                signal = amp1.compute([signal])
+                signal = amp2.compute([signal])
+                signal = amp3.compute([signal])
+                signal = amp4.compute([signal])
+                signal = amp5.compute([signal])
+            except StopIteration:
+                values.add(signal)
+                break
 
     print(max(values))
 
