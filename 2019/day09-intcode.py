@@ -180,7 +180,7 @@ def main():
         original_program = list(map(int, input_file.read().split(",")))
     computer = Computer(original_program)
     try:
-        result = computer.compute([1])
+        result = computer.compute([2])
         print(result)
     except StopIteration:
         pass
