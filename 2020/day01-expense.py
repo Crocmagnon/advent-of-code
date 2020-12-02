@@ -20,5 +20,5 @@ def solve(expense_report, fix_number):
             return prod(combination)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

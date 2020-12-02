@@ -22,22 +22,25 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
 
 def extract_password_and_policy(line) -> Tuple[Tuple[int, int], str, str]:
     policy, password = line.strip().split(": ")
-    rng, letter = policy.split(" ")
-    rng = tuple(map(int, rng.split("-")))
-    return rng, letter, password
+    range_, letter = policy.split(" ")
+    range_ = range_.split("-")
+    range_ = int(range_[0]), int(range_[1])
+    return range_, letter, password
 
 
-def is_valid_part_1(rng: Tuple[int, int], letter: str, password: str):
+def is_valid_part_1(range_: Tuple[int, int], letter: str, password: str):
     counter = Counter(password)
-    return rng[0] <= counter[letter] <= rng[1]
+    return range_[0] <= counter[letter] <= range_[1]
 
 
-def is_valid_part_2(rng: Tuple[int, int], letter: str, password: str):
-    first_index = password[rng[0]-1]
-    second_index = password[rng[1]-1]
-    return first_index != second_index and (first_index == letter or second_index == letter)
+def is_valid_part_2(range_: Tuple[int, int], letter: str, password: str):
+    first_index = password[range_[0] - 1]
+    second_index = password[range_[1] - 1]
+    return first_index != second_index and (
+        first_index == letter or second_index == letter
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main("inputs/day02-tests", 2, 1)
     main("inputs/day02")

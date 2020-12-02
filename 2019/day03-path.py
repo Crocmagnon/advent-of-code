@@ -45,8 +45,7 @@ def main():
                     distances.add(steps + seen_positions[wire][position])
 
     print(min(distances))
-            
+
 
 if __name__ == "__main__":
     main()
-
