@@ -1,6 +1,5 @@
-from collections import Counter
 from math import prod
-from typing import List, Tuple
+from typing import List
 
 TREE = "#"
 

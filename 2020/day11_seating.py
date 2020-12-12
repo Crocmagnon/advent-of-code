@@ -1,11 +1,6 @@
-import copy
 import functools
-import itertools
 from collections import Counter
-from pprint import pprint
-from typing import List, Tuple, Iterable, Dict, Optional
-
-import networkx as nx
+from typing import List, Tuple, Dict, Optional
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
