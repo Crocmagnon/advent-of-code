@@ -9,32 +9,33 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         instructions = f.read().strip().split("\n")
 
     counter_part_1 = solve_part_1(instructions)
-    counter_part_2 = 0
 
     print(f"1. Found {counter_part_1}")
     if expected_part_1:
         assert expected_part_1 == counter_part_1
 
+    counter_part_2 = solve_part_2(instructions)
     print(f"2. Found {counter_part_2}")
     if expected_part_2:
         assert expected_part_2 == counter_part_2
 
 
 def solve_part_1(instructions: List[str]):
-    ship = Ship()
+    ship = ShipPart1()
+    ship.apply_instructions(instructions)
+    return ship.distance_from_origin
+
+
+def solve_part_2(instructions: List[str]):
+    ship = ShipPart2()
     ship.apply_instructions(instructions)
     return ship.distance_from_origin
 
 
 class Ship:
     def __init__(self):
-        self.facing = Direction.EAST
-        self.movements = {
-            Direction.NORTH: 0,
-            Direction.SOUTH: 0,
-            Direction.EAST: 0,
-            Direction.WEST: 0,
-        }
+        self.vertical = 0
+        self.horizontal = 0
 
     def apply_instructions(self, instructions):
         for instruction in instructions:
@@ -42,25 +43,110 @@ class Ship:
 
     @property
     def distance_from_origin(self):
-        return abs(
-            self.movements[Direction.NORTH] - self.movements[Direction.SOUTH]
-        ) + abs(self.movements[Direction.EAST] - self.movements[Direction.WEST])
+        return abs(self.vertical) + abs(self.horizontal)
 
-    def apply_instruction(self, instruction):
+    @staticmethod
+    def parse_instruction(instruction):
         letter = instruction[0]
         value = int(instruction[1:])
+        return letter, value
+
+    def apply_instruction(self, instruction):
+        raise NotImplementedError
+
+
+class ShipPart1(Ship):
+    def __init__(self):
+        super().__init__()
+        self.facing = Direction.EAST
+
+    def apply_instruction(self, instruction):
+        letter, value = self.parse_instruction(instruction)
         if letter in Direction.values():
             direction = Direction(letter)
             self.move(direction, value)
         elif letter == "F":
             self.move(self.facing, value)
-        elif letter in ["R", "L"]:
-            if letter == "L":
-                value = -value
-            self.facing = self.facing.turn(value)
+        else:
+            self.turn(letter, value)
 
     def move(self, direction: "Direction", value: int):
-        self.movements[direction] += value
+        if direction == Direction.NORTH:
+            self.vertical += value
+        elif direction == Direction.SOUTH:
+            self.vertical -= value
+        elif direction == Direction.EAST:
+            self.horizontal += value
+        else:
+            self.horizontal -= value
+
+    def turn(self, letter, value):
+        if letter == "L":
+            value = -value
+        self.facing = self.facing.turn(value)
+
+
+class ShipPart2(Ship):
+    def __init__(self):
+        super().__init__()
+        self.waypoint = (10, 1)  # 10 units east, 1 unit north
+
+    def apply_instruction(self, instruction):
+        letter, value = self.parse_instruction(instruction)
+        if letter in Direction.values():
+            direction = Direction(letter)
+            self.move_waypoint(direction, value)
+        elif letter == "F":
+            self.move_to_waypoint(value)
+        else:
+            if letter == "L":
+                value = -value
+            self.turn_waypoint(value)
+
+    def move_waypoint(self, direction: "Direction", value: int):
+        if direction in [Direction.NORTH, Direction.SOUTH]:
+            if direction == Direction.SOUTH:
+                value = -value
+            self.waypoint = self.waypoint[0], self.waypoint[1] + value
+        else:
+            if direction == Direction.WEST:
+                value = -value
+            self.waypoint = self.waypoint[0] + value, self.waypoint[1]
+
+    def move_to_waypoint(self, number_of_times: int):
+        horizontal = self.waypoint[0] * number_of_times
+        self.horizontal += horizontal
+        vertical = self.waypoint[1] * number_of_times
+        self.vertical += vertical
+
+    def turn_waypoint(self, angle: int):
+        if angle == 0:
+            return
+        horizontal = self.waypoint[0]
+        vertical = self.waypoint[1]
+        top_right_quadrant = vertical >= 0 and horizontal >= 0
+        bottom_right_quadrant = vertical < 0 and horizontal >= 0
+        bottom_left_quadrant = vertical < 0 and horizontal < 0
+        if angle < 0:
+            if top_right_quadrant:
+                self.waypoint = -abs(vertical), abs(horizontal)
+            elif bottom_right_quadrant:
+                self.waypoint = abs(vertical), abs(horizontal)
+            elif bottom_left_quadrant:
+                self.waypoint = abs(vertical), -abs(horizontal)
+            else:
+                self.waypoint = -abs(vertical), -abs(horizontal)
+            return self.turn_waypoint(angle + 90)
+        else:
+            if top_right_quadrant:
+                self.waypoint = abs(vertical), -abs(horizontal)
+            elif bottom_right_quadrant:
+                self.waypoint = -abs(vertical), -abs(horizontal)
+            elif bottom_left_quadrant:
+                self.waypoint = -abs(vertical), abs(horizontal)
+            else:
+                self.waypoint = abs(vertical), abs(horizontal)
+            return self.turn_waypoint(angle - 90)
 
 
 class Direction(enum.Enum):
@@ -100,5 +186,6 @@ class Direction(enum.Enum):
 
 
 if __name__ == "__main__":
-    main("inputs/day12-test1", 25)
-    main("inputs/day12")
+    main("inputs/day12-test1", 25, 286)
+    main("inputs/day12-test2", None, 202)
+    main("inputs/day12", 1177, 46530)
