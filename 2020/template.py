@@ -1,8 +1,3 @@
-import functools
-import re
-from typing import Dict, Iterable, List, Union
-
-
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
     print(f"\n+ Running on {filename}")
     with open(filename) as f:
@@ -29,6 +24,5 @@ def solve_part_2(data):
 
 
 if __name__ == "__main__":
-    main("inputs/day14-test1", 436)
-    main("inputs/day14-test2", 1)
-    main("inputs/day14")
+    main("inputs/dayXX-test1")
+    main("inputs/dayXX")

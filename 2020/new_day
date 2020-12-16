@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euxo pipefail
+
+if [[ $# -ne 2 ]]; then
+    >&2 echo "Usage: $0 <number> <python_module_name>"
+    exit 2
+fi
+
+filename=day$1_$2.py
+cp template.py $filename
+sed -e "s/dayXX/day$1/g" -i "" ./$filename
+touch inputs/day$1
+touch inputs/day$1-test1
