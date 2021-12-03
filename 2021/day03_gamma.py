@@ -44,9 +44,51 @@ def _most_common(count_ones, total, index):
 
 
 def solve_part_2(data):
-    return 0
+    oxygen = _oxygen(data)
+    co2 = _co2(data)
+    return oxygen * co2
+
+
+def _oxygen(data):
+    index = 0
+    max_index = len(data[0])
+    while index < max_index:
+        if len(data) == 1:
+            return int(data[0], 2)
+        ones, zeros = _separate_ones_zeros(data, index)
+        index += 1
+        if len(ones) >= len(zeros):
+            data = ones
+        else:
+            data = zeros
+    return int(data[0], 2)
+
+
+def _co2(data):
+    index = 0
+    max_index = len(data[0])
+    while index < max_index:
+        if len(data) == 1:
+            return int(data[0], 2)
+        ones, zeros = _separate_ones_zeros(data, index)
+        index += 1
+        if len(ones) < len(zeros):
+            data = ones
+        else:
+            data = zeros
+
+
+def _separate_ones_zeros(data, index):
+    ones = []
+    zeros = []
+    for binary in data:
+        if binary[index] == "1":
+            ones.append(binary)
+        else:
+            zeros.append(binary)
+    return ones, zeros
 
 
 if __name__ == "__main__":
-    main("inputs/day03-test1", expected_part_1=198)
-    main("inputs/day03")
+    main("inputs/day03-test1", expected_part_1=198, expected_part_2=230)
+    main("inputs/day03", expected_part_1=1997414, expected_part_2=1032597)
