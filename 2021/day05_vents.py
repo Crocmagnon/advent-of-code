@@ -37,16 +37,38 @@ class Segment:
     def is_vertical(self):
         return self.start.x == self.end.x
 
-    def get_points(self) -> Set[Point]:
+    def get_points_part_1(self) -> Set[Point]:
         if self.is_horizontal():
             start = min(self.start.x, self.end.x)
             end = max(self.start.x, self.end.x)
             return {Point(x, self.start.y) for x in range(start, end + 1)}
-        elif self.is_vertical():
+        if self.is_vertical():
             start = min(self.start.y, self.end.y)
             end = max(self.start.y, self.end.y)
             return {Point(self.start.x, y) for y in range(start, end + 1)}
         return set()
+
+    def get_points_part_2(self) -> Set[Point]:
+        part_1 = self.get_points_part_1()
+        if part_1:
+            return part_1
+
+        x = self.start.x
+        y = self.start.y
+        point = Point(x, y)
+        points = {point}
+        while point != self.end:
+            if x < self.end.x:
+                x += 1
+            else:
+                x -= 1
+            if y < self.end.y:
+                y += 1
+            else:
+                y -= 1
+            point = Point(x, y)
+            points.add(point)
+        return points
 
 
 def parse_data(data: List[str]) -> List[Segment]:
@@ -66,7 +88,7 @@ def solve_part_1(data: List[Segment]) -> int:
     seen_points = set()
     multiple_times = set()
     for segment in data:
-        for point in segment.get_points():
+        for point in segment.get_points_part_1():
             if point in seen_points:
                 multiple_times.add(point)
             seen_points.add(point)
@@ -74,9 +96,17 @@ def solve_part_1(data: List[Segment]) -> int:
 
 
 def solve_part_2(data: List[Segment]) -> int:
-    return 0
+    seen_points = set()
+    multiple_times = set()
+    for segment in data:
+        for point in segment.get_points_part_2():
+            if point in seen_points:
+                multiple_times.add(point)
+            seen_points.add(point)
+    return len(multiple_times)
 
 
 if __name__ == "__main__":
-    main("inputs/day05-test1", expected_part_1=5)
-    main("inputs/day05", expected_part_1=7297)
+    main("inputs/day05-test2", expected_part_1=2, expected_part_2=3)
+    main("inputs/day05-test1", expected_part_1=5, expected_part_2=12)
+    main("inputs/day05", expected_part_1=7297, expected_part_2=21038)
