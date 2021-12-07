@@ -1,3 +1,4 @@
+import math
 import statistics
 from typing import List
 
@@ -33,9 +34,24 @@ def solve_part_1(data: List[int]) -> int:
 
 
 def solve_part_2(data: List[int]) -> int:
-    return 0
+    target_position_1 = math.floor(statistics.mean(data))
+    target_position_2 = math.ceil(statistics.mean(data))
+    return min(
+        [
+            compute_part_2(data, target_position_1),
+            compute_part_2(data, target_position_2),
+        ]
+    )
+
+
+def compute_part_2(data: List[int], target_position: int) -> int:
+    fuel_cost = 0
+    for index, crab in enumerate(data):
+        fuel_for_crab = sum([i for i in range(abs(crab - target_position) + 1)])
+        fuel_cost += fuel_for_crab
+    return fuel_cost
 
 
 if __name__ == "__main__":
-    main("inputs/day07-test1", expected_part_1=37)
-    main("inputs/day07")
+    main("inputs/day07-test1", expected_part_1=37, expected_part_2=168)
+    main("inputs/day07", expected_part_1=349769, expected_part_2=99540554)
