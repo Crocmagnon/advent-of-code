@@ -1,6 +1,5 @@
 import enum
 import functools
-from typing import List
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -20,13 +19,13 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == counter_part_2
 
 
-def solve_part_1(instructions: List[str]):
+def solve_part_1(instructions: list[str]):
     ship = ShipPart1()
     ship.apply_instructions(instructions)
     return ship.distance_from_origin
 
 
-def solve_part_2(instructions: List[str]):
+def solve_part_2(instructions: list[str]):
     ship = ShipPart2()
     ship.apply_instructions(instructions)
     return ship.distance_from_origin

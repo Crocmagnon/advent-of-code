@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Set, Tuple
 
 
 @dataclass
@@ -41,7 +40,7 @@ class Asteroid:
 
         return True
 
-    def can_see(self, other: "Asteroid", asteroids: Set["Asteroid"]) -> bool:
+    def can_see(self, other: "Asteroid", asteroids: set["Asteroid"]) -> bool:
         for asteroid in asteroids:
             if asteroid in [self, other]:
                 continue

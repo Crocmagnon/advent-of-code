@@ -1,5 +1,3 @@
-from typing import List
-
 WIDTH = 25
 HEIGHT = 6
 LAYER_SIZE = WIDTH * HEIGHT
@@ -9,7 +7,7 @@ BLACK = "0"
 TRANSPARENT = "2"
 
 
-def find_pixel(layers: List[str], index: int) -> str:
+def find_pixel(layers: list[str], index: int) -> str:
     for layer in layers:
         pixel = layer[index]
         if pixel in [WHITE, BLACK]:

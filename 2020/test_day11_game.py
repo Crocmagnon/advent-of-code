@@ -1,5 +1,4 @@
 import pytest
-
 from day11_seating import SeatMap
 
 

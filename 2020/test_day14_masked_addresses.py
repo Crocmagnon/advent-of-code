@@ -1,5 +1,4 @@
 import pytest
-
 from day14_docking import ProgramPart2
 
 

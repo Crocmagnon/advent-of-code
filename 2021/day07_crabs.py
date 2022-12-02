@@ -1,6 +1,5 @@
 import math
 import statistics
-from typing import List
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -21,11 +20,11 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == solution_part_2
 
 
-def parse_data(data: List[str]) -> List[int]:
+def parse_data(data: list[str]) -> list[int]:
     return list(map(int, data[0].split(",")))
 
 
-def solve_part_1(data: List[int]) -> int:
+def solve_part_1(data: list[int]) -> int:
     target_position = int(statistics.median(data))
     fuel_cost = 0
     for crab in data:
@@ -33,7 +32,7 @@ def solve_part_1(data: List[int]) -> int:
     return fuel_cost
 
 
-def solve_part_2(data: List[int]) -> int:
+def solve_part_2(data: list[int]) -> int:
     target_position_1 = math.floor(statistics.mean(data))
     target_position_2 = math.ceil(statistics.mean(data))
     return min(
@@ -44,7 +43,7 @@ def solve_part_2(data: List[int]) -> int:
     )
 
 
-def compute_part_2(data: List[int], target_position: int) -> int:
+def compute_part_2(data: list[int], target_position: int) -> int:
     fuel_cost = 0
     for index, crab in enumerate(data):
         fuel_for_crab = sum([i for i in range(abs(crab - target_position) + 1)])

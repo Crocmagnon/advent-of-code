@@ -1,6 +1,6 @@
 import functools
 import itertools
-from typing import List, Tuple
+from typing import List
 
 import networkx as nx
 
@@ -39,13 +39,13 @@ def count_diffs(jolts):
     return diffs
 
 
-def solve_part_2(jolts: List[int]):
+def solve_part_2(jolts: list[int]):
     jolts = tuple(jolts)
     return with_recursion(jolts, jolts[-1])
 
 
-@functools.lru_cache(maxsize=None)
-def with_recursion(jolts: Tuple[int], target: int):
+@functools.cache
+def with_recursion(jolts: tuple[int], target: int):
     if target == 0:
         return 1
     counter = 0

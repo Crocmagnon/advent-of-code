@@ -1,5 +1,4 @@
 from collections import Counter
-from typing import Tuple
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -20,7 +19,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert counter_part_2 == expected_part_2
 
 
-def extract_password_and_policy(line) -> Tuple[Tuple[int, int], str, str]:
+def extract_password_and_policy(line) -> tuple[tuple[int, int], str, str]:
     policy, password = line.strip().split(": ")
     range_, letter = policy.split(" ")
     range_ = range_.split("-")
@@ -28,12 +27,12 @@ def extract_password_and_policy(line) -> Tuple[Tuple[int, int], str, str]:
     return range_, letter, password
 
 
-def is_valid_part_1(range_: Tuple[int, int], letter: str, password: str):
+def is_valid_part_1(range_: tuple[int, int], letter: str, password: str):
     counter = Counter(password)
     return range_[0] <= counter[letter] <= range_[1]
 
 
-def is_valid_part_2(range_: Tuple[int, int], letter: str, password: str):
+def is_valid_part_2(range_: tuple[int, int], letter: str, password: str):
     first_index = password[range_[0] - 1]
     second_index = password[range_[1] - 1]
     return first_index != second_index and (

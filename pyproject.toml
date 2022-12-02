@@ -3,7 +3,7 @@ name = "advent-of-code"
 version = "0.1.0"
 description = ""
 authors = ["Gabriel Augendre <gabriel@augendre.info>"]
-license = "MIT"
+license = "Unlicense"
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -18,8 +18,29 @@ pytest = ">=6.1.2"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
-target-version = ['py38']
 
-[tool.isort]
-profile = "black"
+###############################################################################
+# flake8 / flakeheaven
+###############################################################################
+[tool.flakeheaven]
+max_complexity = 10
+format = "grouped"
+baseline = "baseline.txt"
+
+# Base rules
+#############################
+[tool.flakeheaven.plugins]
+"*" = [
+    "+*",
+    "-E501", # long lines
+    "-E203", # conflict with black on PEP8 interpretation
+    "-W503",  # deprecated rule: https://www.flake8rules.com/rules/W503.html
+]
+flake8-builtins = [
+    "+*",
+    "-A003", # class attribute is shadowing a python builtin
+]
+flake8-bandit = [
+    "+*",
+    "-S101", # Use of assert detected.
+]

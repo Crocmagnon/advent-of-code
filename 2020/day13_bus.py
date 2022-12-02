@@ -1,7 +1,6 @@
-import enum
 import functools
 import math
-from typing import List, Dict
+from typing import Dict
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):

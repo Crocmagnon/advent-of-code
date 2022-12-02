@@ -1,6 +1,6 @@
 import functools
 from collections import Counter
-from typing import List, Tuple, Dict, Optional
+from typing import Dict
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -25,7 +25,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == counter_part_2
 
 
-Coordinates = Tuple[int, int]
+Coordinates = tuple[int, int]
 
 
 class SeatMap:
@@ -90,7 +90,7 @@ class SeatMap:
                 count_occupied += 1
         return count_occupied
 
-    def _visible_seats(self, coordinates: Coordinates) -> List[str]:
+    def _visible_seats(self, coordinates: Coordinates) -> list[str]:
         adjacent_cells = [
             self._find_top_left(coordinates),
             self._find_top(coordinates),
@@ -105,13 +105,13 @@ class SeatMap:
         return list(map(self._square_at, filter(None, adjacent_cells)))
 
     @functools.lru_cache(None)
-    def _find_top_left(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_top_left(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (-1, -1))
 
     @functools.lru_cache(None)
     def _find_with_delta(
-        self, coordinates: Coordinates, delta: Tuple[int, int]
-    ) -> Optional[Coordinates]:
+        self, coordinates: Coordinates, delta: tuple[int, int]
+    ) -> Coordinates | None:
         other_coord = (coordinates[0] + delta[0], coordinates[1] + delta[1])
         try:
             self._square_at(other_coord)
@@ -120,31 +120,31 @@ class SeatMap:
         return other_coord
 
     @functools.lru_cache(None)
-    def _find_top(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_top(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (-1, 0))
 
     @functools.lru_cache(None)
-    def _find_top_right(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_top_right(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (-1, 1))
 
     @functools.lru_cache(None)
-    def _find_right(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_right(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (0, 1))
 
     @functools.lru_cache(None)
-    def _find_bottom_right(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_bottom_right(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (1, 1))
 
     @functools.lru_cache(None)
-    def _find_bottom(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_bottom(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (1, 0))
 
     @functools.lru_cache(None)
-    def _find_bottom_left(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_bottom_left(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (1, -1))
 
     @functools.lru_cache(None)
-    def _find_left(self, coordinates: Coordinates) -> Optional[Coordinates]:
+    def _find_left(self, coordinates: Coordinates) -> Coordinates | None:
         return self._find_with_delta(coordinates, (0, -1))
 
 
@@ -153,8 +153,8 @@ class SeatMapPart2(SeatMap):
 
     @functools.lru_cache(None)
     def _find_with_delta(
-        self, coordinates: Coordinates, delta: Tuple[int, int]
-    ) -> Optional[Coordinates]:
+        self, coordinates: Coordinates, delta: tuple[int, int]
+    ) -> Coordinates | None:
         other_coord = (coordinates[0] + delta[0], coordinates[1] + delta[1])
         try:
             other_square = self._square_at(other_coord)

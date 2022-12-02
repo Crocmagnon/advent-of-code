@@ -1,6 +1,4 @@
-import functools
-import re
-from typing import Dict, Iterable, List, Tuple, Union
+from typing import Union
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -20,8 +18,8 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == counter_part_2
 
 
-SeenTuple = Union[Tuple[int], Tuple[int, int]]
-Seen = Dict[int, SeenTuple]
+SeenTuple = Union[tuple[int], tuple[int, int]]
+Seen = dict[int, SeenTuple]
 
 
 def solve_part_1(starting_numbers):

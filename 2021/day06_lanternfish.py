@@ -1,6 +1,4 @@
 from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Dict, Iterator, List
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -21,7 +19,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == solution_part_2
 
 
-def parse_data(data: List[str]) -> Dict[int, int]:
+def parse_data(data: list[str]) -> dict[int, int]:
     dct = defaultdict(int)
     for x in map(int, data[0].split(",")):
         dct[x] += 1
@@ -34,7 +32,7 @@ def solve_part_1(data) -> int:
     return sum(data.values())
 
 
-def _run_day(data: Dict[int, int]) -> Dict[int, int]:
+def _run_day(data: dict[int, int]) -> dict[int, int]:
     new_data = defaultdict(int)
     for k, v in data.items():
         if k == 0:

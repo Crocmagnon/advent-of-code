@@ -1,6 +1,5 @@
-import itertools
 from collections import defaultdict
-from typing import List, Union
+from typing import List
 
 RELATIVE_MODE = 2
 POSITION_MODE = 0
@@ -36,7 +35,7 @@ class IntcodeOutput(Exception):
 
 
 class Computer:
-    def __init__(self, initial_program: List[int], inputs: List[int] = None):
+    def __init__(self, initial_program: list[int], inputs: list[int] = None):
         self.program = defaultdict(int, enumerate(initial_program))
         if inputs is None:
             inputs = []
@@ -75,7 +74,7 @@ class Computer:
             self.pointer += offset
         self.pointer_moved = False
 
-    def compute(self, additional_inputs: List[int] = None) -> int:
+    def compute(self, additional_inputs: list[int] = None) -> int:
         if additional_inputs is None:
             additional_inputs = []
         self.inputs.extend(additional_inputs)

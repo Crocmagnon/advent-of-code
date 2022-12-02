@@ -1,5 +1,5 @@
 import itertools
-from typing import List, Union
+from typing import List
 
 NUMBER_OF_PARAMS_MAP = {
     1: 3,
@@ -54,13 +54,13 @@ class Computer:
             self.pointer += offset
         self.pointer_moved = False
 
-    def __init__(self, initial_program: List[int], inputs: List[int] = None):
+    def __init__(self, initial_program: list[int], inputs: list[int] = None):
         self.program = initial_program.copy()  # type: List[int]
         self.inputs = inputs.copy()  # type: List[int]
         self.pointer = 0
         self.pointer_moved = False
 
-    def compute(self, additional_inputs: List[int] = None) -> int:
+    def compute(self, additional_inputs: list[int] = None) -> int:
         if additional_inputs is None:
             additional_inputs = []
         self.inputs.extend(additional_inputs)

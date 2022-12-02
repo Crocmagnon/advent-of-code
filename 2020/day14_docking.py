@@ -1,6 +1,7 @@
 import functools
 import re
-from typing import List, Dict, Iterable, Union
+from collections.abc import Iterable
+from typing import Union
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -24,7 +25,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == counter_part_2
 
 
-Memory = Dict[Union[str, int], Union[str, int]]
+Memory = dict[Union[str, int], Union[str, int]]
 
 
 class Program:
@@ -72,7 +73,7 @@ class ProgramPart1(Program):
         self.memory[address] = self.get_masked_value(value)
 
     def get_masked_value(self, value: int) -> str:
-        binary_value = "{:036b}".format(value)
+        binary_value = f"{value:036b}"
         masked_value = []
         for binary_bit, mask_bit in zip(binary_value, self.mask):
             if mask_bit == "X":
@@ -102,7 +103,7 @@ class ProgramPart2(Program):
             self.memory[masked_address] = value
 
     def get_masked_addresses(self, address: int) -> Iterable[int]:
-        binary_address = "{:036b}".format(address)
+        binary_address = f"{address:036b}"
         corrected_binary_address = ""
         for binary_bit, mask_bit in zip(binary_address, self.mask):
             if mask_bit == "1":
@@ -113,7 +114,7 @@ class ProgramPart2(Program):
         int_base_2 = functools.partial(int, base=2)
         return map(int_base_2, addresses)
 
-    def get_floating_addresses(self, prefix: str, address: str, mask: str) -> List[str]:
+    def get_floating_addresses(self, prefix: str, address: str, mask: str) -> list[str]:
         if "X" not in mask:
             return [prefix + address]
         first_x = mask.index("X")

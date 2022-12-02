@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict
 
 
 @dataclass
@@ -21,7 +21,7 @@ class Node:
             chain.append(current)
         return chain
 
-    def common_chain(self, other: "Node") -> List["Node"]:
+    def common_chain(self, other: "Node") -> list["Node"]:
         chain = []
         for el1, el2 in zip(reversed(self.chain()), reversed(other.chain())):
             if el1 != el2:

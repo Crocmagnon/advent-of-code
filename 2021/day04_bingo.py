@@ -1,8 +1,8 @@
 import itertools
-from typing import List, Set, TypeAlias
+from typing import TypeAlias
 
-Numbers: TypeAlias = List[int]
-Grid: TypeAlias = List[Numbers]
+Numbers: TypeAlias = list[int]
+Grid: TypeAlias = list[Numbers]
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -23,10 +23,10 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == solution_part_2
 
 
-def parse_data(data: List[str]) -> (Numbers, List[Grid]):
+def parse_data(data: list[str]) -> (Numbers, list[Grid]):
     numbers: Numbers = list(map(int, data[0].split(",")))
     data = data[1:]
-    grids: List[Grid] = []
+    grids: list[Grid] = []
     for grid in data:
         parsed_grid: Grid = []
         grid_lines = grid.split("\n")
@@ -37,8 +37,8 @@ def parse_data(data: List[str]) -> (Numbers, List[Grid]):
     return numbers, grids
 
 
-def solve_part_1(numbers: Numbers, grids: List[Grid]) -> int:
-    seen: Set[int] = set()
+def solve_part_1(numbers: Numbers, grids: list[Grid]) -> int:
+    seen: set[int] = set()
     for number in numbers:
         seen.add(number)
         for grid in grids:
@@ -46,18 +46,18 @@ def solve_part_1(numbers: Numbers, grids: List[Grid]) -> int:
                 return sum(unseen(grid, seen)) * number
 
 
-def check_bingo(grid: Grid, seen: Set[int]) -> bool:
+def check_bingo(grid: Grid, seen: set[int]) -> bool:
     return check_row(grid, seen) or check_column(grid, seen)
 
 
-def check_row(grid: Grid, seen: Set[int]) -> bool:
+def check_row(grid: Grid, seen: set[int]) -> bool:
     for row in grid:
         if check_line(row, seen):
             return True
     return False
 
 
-def check_column(grid: Grid, seen: Set[int]) -> bool:
+def check_column(grid: Grid, seen: set[int]) -> bool:
     for i in range(len(grid[0])):
         column = [row[i] for row in grid]
         if check_line(column, seen):
@@ -65,21 +65,21 @@ def check_column(grid: Grid, seen: Set[int]) -> bool:
     return False
 
 
-def check_line(line: Numbers, seen: Set[int]) -> bool:
+def check_line(line: Numbers, seen: set[int]) -> bool:
     for number in line:
         if number not in seen:
             return False
     return True
 
 
-def unseen(grid: Grid, seen: Set[int]) -> Numbers:
+def unseen(grid: Grid, seen: set[int]) -> Numbers:
     return [n for n in itertools.chain.from_iterable(grid) if n not in seen]
 
 
-def solve_part_2(numbers: Numbers, grids: List[Grid]) -> int:
-    seen: Set[int] = set()
+def solve_part_2(numbers: Numbers, grids: list[Grid]) -> int:
+    seen: set[int] = set()
     score = 0
-    winners: Set[int] = set()
+    winners: set[int] = set()
     for number in numbers:
         seen.add(number)
         for index, grid in enumerate(grids):

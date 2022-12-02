@@ -1,6 +1,3 @@
-from typing import List
-
-
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
     print(f"\n+ Running on {filename}")
     with open(filename) as f:
@@ -19,7 +16,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == solution_part_2
 
 
-def parse_data(data: List[str]):
+def parse_data(data: list[str]):
     return data
 
 

@@ -3,24 +3,43 @@ repos:
     rev: v4.4.0
     hooks:
       - id: check-ast
-        types: [python]
+      - id: check-json
       - id: check-toml
-        types: [toml]
+      - id: check-xml
       - id: check-yaml
-        types: [yaml]
       - id: end-of-file-fixer
-        types: [python]
       - id: check-merge-conflict
+      - id: pretty-format-json
+        args:
+          - --autofix
+          - --no-sort-keys
       - id: trailing-whitespace
         args:
           - --markdown-linebreak-ext=md
-  - repo: https://github.com/timothycrosley/isort
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.2.2
+    hooks:
+      - id: pyupgrade
+        args: [--py311-plus]
+  - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
       - id: isort
-        types: [python]
+        args: [--profile, black]
   - repo: https://github.com/psf/black
     rev: 22.10.0
     hooks:
-    - id: black
-      types: [python]
+      - id: black
+        args: [--target-version, py310]
+  - repo: https://github.com/flakeheaven/flakeheaven
+    rev: 3.2.1
+    hooks:
+      - id: flakeheaven
+        additional_dependencies:
+          - flake8-annotations-complexity
+          - flake8-bandit
+          - flake8-builtins
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-noqa
+          - pep8-naming

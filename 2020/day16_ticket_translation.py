@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import Iterable, List, Tuple
+from collections.abc import Iterable
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -22,8 +22,8 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == counter_part_2
 
 
-Range = Tuple[int, int]
-Ranges = List[Range]
+Range = tuple[int, int]
+Ranges = list[Range]
 
 
 class TicketAnalyserPart1:
@@ -40,7 +40,7 @@ class TicketAnalyserPart1:
         self.valid_tickets = []
 
     @staticmethod
-    def extract_ranges(named_range: str) -> Tuple[str, Ranges]:
+    def extract_ranges(named_range: str) -> tuple[str, Ranges]:
         name, ranges = named_range.split(": ")
         reg = re.compile(r"(\d+)-(\d+) or (\d+)-(\d+)$")
         matches = reg.match(ranges)
@@ -57,7 +57,7 @@ class TicketAnalyserPart1:
                 self.valid_tickets.append(ticket)
         return error_rate
 
-    def get_invalid_values(self, ticket: List[int]) -> List[int]:
+    def get_invalid_values(self, ticket: list[int]) -> list[int]:
         invalid_values = []
         for value in ticket:
             if self.value_is_invalid(value):
@@ -77,8 +77,7 @@ class TicketAnalyserPart1:
 
     def iter_ranges(self) -> Iterable[Range]:
         for ranges in self.ranges.values():
-            for rng in ranges:
-                yield rng
+            yield from ranges
 
     def compute_class_assignation(self):
         possible_columns_for_range = defaultdict(list)

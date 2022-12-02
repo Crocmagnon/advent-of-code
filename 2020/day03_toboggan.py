@@ -28,7 +28,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert prod_trees == expected_part_2
 
 
-def trees_for_slope(forest: List[str], right: int, down: int) -> int:
+def trees_for_slope(forest: list[str], right: int, down: int) -> int:
     trees = 0
     current_line = 0
     current_col = 0

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List, Set
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -37,7 +36,7 @@ class Segment:
     def is_vertical(self):
         return self.start.x == self.end.x
 
-    def get_points_part_1(self) -> Set[Point]:
+    def get_points_part_1(self) -> set[Point]:
         if self.is_horizontal():
             start = min(self.start.x, self.end.x)
             end = max(self.start.x, self.end.x)
@@ -48,7 +47,7 @@ class Segment:
             return {Point(self.start.x, y) for y in range(start, end + 1)}
         return set()
 
-    def get_points_part_2(self) -> Set[Point]:
+    def get_points_part_2(self) -> set[Point]:
         part_1 = self.get_points_part_1()
         if part_1:
             return part_1
@@ -71,7 +70,7 @@ class Segment:
         return points
 
 
-def parse_data(data: List[str]) -> List[Segment]:
+def parse_data(data: list[str]) -> list[Segment]:
     segments = []
     for line in data:
         start, end = line.split(" -> ")
@@ -84,7 +83,7 @@ def parse_data(data: List[str]) -> List[Segment]:
     return segments
 
 
-def solve_part_1(data: List[Segment]) -> int:
+def solve_part_1(data: list[Segment]) -> int:
     seen_points = set()
     multiple_times = set()
     for segment in data:
@@ -95,7 +94,7 @@ def solve_part_1(data: List[Segment]) -> int:
     return len(multiple_times)
 
 
-def solve_part_2(data: List[Segment]) -> int:
+def solve_part_2(data: list[Segment]) -> int:
     seen_points = set()
     multiple_times = set()
     for segment in data:
