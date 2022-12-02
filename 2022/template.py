@@ -16,15 +16,18 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == solution_part_2
 
 
-def parse_data(data: list[str]):
+DataType = list[str]
+
+
+def parse_data(data: list[str]) -> DataType:
     return data
 
 
-def solve_part_1(data) -> int:
+def solve_part_1(data: DataType) -> int:
     return 0
 
 
-def solve_part_2(data) -> int:
+def solve_part_2(data: DataType) -> int:
     return 0
 
 
