@@ -34,4 +34,4 @@ def solve_part_2(data: list[int]) -> int:
 
 if __name__ == "__main__":
     main("inputs/day01-test1", expected_part_1=24000, expected_part_2=45000)
-    main("inputs/day01", expected_part_1=70296)
+    main("inputs/day01", expected_part_1=70296, expected_part_2=205381)

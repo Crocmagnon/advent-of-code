@@ -11,14 +11,15 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
     with open(filename) as f:
         data = f.read().strip().split("\n")
 
-    data = parse_data(data)
-    solution_part_1 = solve_part_1(data)
+    parsed_data = parse_data_part_1(data)
+    solution_part_1 = solve_part_1(parsed_data)
 
     print(f"1. Found {solution_part_1}")
     if expected_part_1:
         assert expected_part_1 == solution_part_1
 
-    solution_part_2 = solve_part_2(data)
+    parsed_data = parse_data_part_2(data)
+    solution_part_2 = solve_part_2(parsed_data)
     print(f"2. Found {solution_part_2}")
     if expected_part_2:
         assert expected_part_2 == solution_part_2
@@ -40,11 +41,25 @@ class Shape(enum.IntEnum):
             "Z": cls.SCISSORS,
         }[letter]
 
+    def winner_for_opponent(self) -> Shape:
+        return {
+            self.SCISSORS: self.ROCK,
+            self.ROCK: self.PAPER,
+            self.PAPER: self.SCISSORS,
+        }[self]
+
+    def loser_for_opponent(self) -> Shape:
+        return {
+            self.ROCK: self.SCISSORS,
+            self.PAPER: self.ROCK,
+            self.SCISSORS: self.PAPER,
+        }[self]
+
 
 @dataclasses.dataclass
 class Round:
     opponent: Shape
-    me: Shape
+    me: Shape | None = None
 
     @property
     def value(self) -> int:
@@ -67,15 +82,33 @@ class Round:
     def draw(self) -> bool:
         return self.opponent == self.me
 
+    def complete(self, instruction: str):
+        if instruction == "X":
+            self.me = self.opponent.loser_for_opponent()
+        elif instruction == "Y":
+            self.me = self.opponent
+        else:
+            self.me = self.opponent.winner_for_opponent()
+
 
 DataType = list[Round]
 
 
-def parse_data(data: list[str]) -> DataType:
+def parse_data_part_1(data: list[str]) -> DataType:
     rounds = []
     for round in data:  # noqa: A001
         opponent, me = round.split(" ")
         rounds.append(Round(Shape.from_input(opponent), Shape.from_input(me)))
+    return rounds
+
+
+def parse_data_part_2(data: list[str]) -> DataType:
+    rounds = []
+    for round in data:  # noqa: A001
+        opponent, instruction = round.split(" ")
+        r = Round(Shape.from_input(opponent))
+        r.complete(instruction)
+        rounds.append(r)
     return rounds
 
 
@@ -84,7 +117,7 @@ def solve_part_1(data: DataType) -> int:
 
 
 def solve_part_2(data: DataType) -> int:
-    return 0
+    return sum([round.value for round in data])  # noqa: A001
 
 
 @pytest.mark.parametrize(
@@ -130,5 +163,5 @@ def test_round_defeat(opponent, me):
 
 
 if __name__ == "__main__":
-    main("inputs/day02-test1", expected_part_1=15)
-    main("inputs/day02")
+    main("inputs/day02-test1", expected_part_1=15, expected_part_2=12)
+    main("inputs/day02", expected_part_1=12156, expected_part_2=10835)
