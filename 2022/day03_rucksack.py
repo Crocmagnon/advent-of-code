@@ -1,4 +1,3 @@
-from typing import List, Tuple
 import string
 
 
@@ -20,10 +19,10 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
         assert expected_part_2 == solution_part_2
 
 
-DataType = List[Tuple[str, str]]
+DataType = list[tuple[str, str]]
 
 
-def parse_data(data: List[str]) -> DataType:
+def parse_data(data: list[str]) -> DataType:
     sacks = []
     for line in data:
         stop = int(len(line) /2)
@@ -41,7 +40,7 @@ def solve_part_1(data: DataType) -> int:
     return total
 
 
-def solve_part_2(data: List[str]) -> int:
+def solve_part_2(data: list[str]) -> int:
     total = 0
     for chunk in chunks(data, 3):
         common_letter = set(chunk[0]).intersection(set(chunk[1])).intersection(set(chunk[2])).pop()
@@ -54,6 +53,5 @@ def chunks(data, size):
         yield data[i:i+size]
 
 if __name__ == "__main__":
-
     main("inputs/day03-test1", expected_part_1=157, expected_part_2=70)
     main("inputs/day03", expected_part_1=7716, expected_part_2=2973)
