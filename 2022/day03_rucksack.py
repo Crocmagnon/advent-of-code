@@ -25,7 +25,7 @@ DataType = list[tuple[str, str]]
 def parse_data(data: list[str]) -> DataType:
     sacks = []
     for line in data:
-        stop = int(len(line) /2)
+        stop = int(len(line) / 2)
         halves = (line[:stop], line[stop:])
         sacks.append(halves)
     return sacks
@@ -43,14 +43,17 @@ def solve_part_1(data: DataType) -> int:
 def solve_part_2(data: list[str]) -> int:
     total = 0
     for chunk in chunks(data, 3):
-        common_letter = set(chunk[0]).intersection(set(chunk[1])).intersection(set(chunk[2])).pop()
+        common_letter = (
+            set(chunk[0]).intersection(set(chunk[1])).intersection(set(chunk[2])).pop()
+        )
         total += string.ascii_letters.index(common_letter) + 1
     return total
 
 
 def chunks(data, size):
     for i in range(0, len(data), size):
-        yield data[i:i+size]
+        yield data[i : i + size]
+
 
 if __name__ == "__main__":
     main("inputs/day03-test1", expected_part_1=157, expected_part_2=70)
