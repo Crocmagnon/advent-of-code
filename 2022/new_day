@@ -8,7 +8,11 @@ fi
 
 filename=day$1_$2.py
 cp template.py $filename
-sed -e "s/dayXX/day$1/g" -i "" ./$filename
+if [ "$(uname -s)" == "Linux" ]; then
+    sed -e "s/dayXX/day$1/g" -i ./$filename
+else
+    sed -e "s/dayXX/day$1/g" -i "" ./$filename
+fi
 mkdir -p inputs
 touch inputs/day$1
 touch inputs/day$1-test1
