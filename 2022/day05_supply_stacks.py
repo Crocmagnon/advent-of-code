@@ -25,20 +25,47 @@ def main(filename: str, expected_part_1: str = None, expected_part_2: str = None
 @dataclasses.dataclass
 class Instruction:
     quantity: int
-    source: int
-    destination: int
+    _source: int
+    _destination: int
 
     @classmethod
     def from_text(cls, text) -> Instruction:
-        match = re.match(r"move (\d) from (\d) to (\d)", text)
+        match = re.match(r"move (\d+) from (\d+) to (\d+)", text)
         quantity, source, destination = match.groups()
-        return cls(quantity, source, destination)
+        return cls(int(quantity), int(source), int(destination))
+
+    @property
+    def source(self) -> int:
+        return self._source - 1
+
+    @property
+    def destination(self) -> int:
+        return self._destination - 1
 
 
 @dataclasses.dataclass
 class Game:
     stacks: list[list[str]]
     instructions: list[Instruction]
+
+    def play_instructions(self) -> None:
+        for instruction in self.instructions:
+            self.execute(instruction)
+
+    def execute(self, instruction: Instruction) -> None:
+        for _ in range(instruction.quantity):
+            item = self.stacks[instruction.source].pop()
+            self.stacks[instruction.destination].append(item)
+
+    def message(self) -> str:
+        msg = ""
+        for stack in self.stacks:
+            if stack:
+                msg += stack[-1]
+        return msg
+
+    def __str__(self):
+        return "\n".join(map(str, self.stacks))
 
 
 DataType = Game
@@ -49,12 +76,24 @@ def parse_data(data: list[str]) -> DataType:
     parsed_instructions = []
     for instruction in instructions.split("\n"):
         parsed_instructions.append(Instruction.from_text(instruction))
-    print(stacks.split("\n"))
-    return None
+    stacks = list(stacks.split("\n")[::-1])
+    header = stacks[0]
+    parsed_stacks = []
+    for index, char in enumerate(header):
+        if char != " ":
+            stack = []
+            for row in stacks[1:]:
+                char = row[index]
+                if char == " ":
+                    break
+                stack.append(char)
+            parsed_stacks.append(stack)
+    return Game(parsed_stacks, parsed_instructions)
 
 
 def solve_part_1(data: DataType) -> str:
-    return "0"
+    data.play_instructions()
+    return data.message()
 
 
 def solve_part_2(data: DataType) -> str:
