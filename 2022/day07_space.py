@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import math
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -102,7 +103,19 @@ def solve_part_1(root: Directory) -> int:
 
 
 def solve_part_2(root: Directory) -> int:
-    return 0
+    total_disk_space = 70000000
+    required_disk_space = 30000000
+    unused_space = total_disk_space - root.size
+    minimum_size_to_delete = required_disk_space - unused_space
+    minimum_directory_size = math.inf
+    to_visit = [root]
+    while to_visit:
+        visited = to_visit.pop()
+        to_visit.extend([child for child in visited.children if child.is_directory])
+        size = visited.size
+        if minimum_size_to_delete <= size <= minimum_directory_size:
+            minimum_directory_size = size
+    return minimum_directory_size
 
 
 if __name__ == "__main__":
