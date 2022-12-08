@@ -46,9 +46,13 @@ def sliding_window(stream: str, size: int) -> Generator[str]:
 
 
 def solve_part_2(data: DataType) -> int:
+    size = 14
+    for index, window in enumerate(sliding_window(data, size)):
+        if not repeating(window):
+            return index + size
     return 0
 
 
 if __name__ == "__main__":
-    main("inputs/day06-test1", expected_part_1=10)
-    main("inputs/day06", expected_part_1=1578)
+    main("inputs/day06-test1", expected_part_1=10, expected_part_2=29)
+    main("inputs/day06", expected_part_1=1578, expected_part_2=2178)
