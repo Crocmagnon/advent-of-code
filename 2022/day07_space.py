@@ -103,8 +103,8 @@ def solve_part_1(root: Directory) -> int:
 
 
 def solve_part_2(root: Directory) -> int:
-    total_disk_space = 70000000
-    required_disk_space = 30000000
+    total_disk_space = 70_000_000
+    required_disk_space = 30_000_000
     unused_space = total_disk_space - root.size
     minimum_size_to_delete = required_disk_space - unused_space
     minimum_directory_size = math.inf
