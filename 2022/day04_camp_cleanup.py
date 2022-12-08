@@ -24,9 +24,9 @@ def parse_data(data: list[str]) -> DataType:
     for line in data:
         first, second = line.split(",")
         first_1, first_2 = first.split("-")
-        first = set(range(int(first_1), int(first_2)+1))
+        first = set(range(int(first_1), int(first_2) + 1))
         second_1, second_2 = second.split("-")
-        second = set(range(int(second_1), int(second_2)+1))
+        second = set(range(int(second_1), int(second_2) + 1))
         lines.append((first, second))
     return lines
 
