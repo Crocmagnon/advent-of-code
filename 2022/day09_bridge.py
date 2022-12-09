@@ -87,9 +87,37 @@ def solve_part_1(instructions: DataType) -> int:
 
 
 def solve_part_2(instructions: DataType) -> int:
-    return 0
+    head = Point()
+    tails = [Point() for _ in range(9)]
+    visited = set()
+    for instruction in instructions:
+        print(instruction)
+        count = instruction[1]
+        while count > 0:
+            head.move(instruction)
+            tails[0].follow(head)
+            for i in range(1, len(tails)):
+                tails[i].follow(tails[i - 1])
+            tail_tuple = tails[-1].tuple
+            visited.add(tail_tuple)
+            count -= 1
+        # print_grid([head, *tails])
+    return len(visited)
+
+
+def print_grid(rope: list[Point], size: tuple[int, int] = (21, 27)) -> None:
+    rope = [knot.tuple for knot in rope]
+    for row in range(int(-size[0] / 2), int(size[0] / 2)):
+        for col in range(int(-size[1] / 2), int(size[1] / 2)):
+            try:
+                char = rope.index((col, row))
+            except ValueError:
+                char = "."
+            print(char, end="")
+        print()
 
 
 if __name__ == "__main__":
-    main("inputs/day09-test1", expected_part_1=13)
-    main("inputs/day09", expected_part_1=5619)
+    main("inputs/day09-test1", expected_part_1=13, expected_part_2=1)
+    main("inputs/day09-test2", expected_part_2=36)
+    main("inputs/day09", expected_part_1=5619, expected_part_2=2376)
