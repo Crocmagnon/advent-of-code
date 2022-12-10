@@ -48,10 +48,38 @@ def solve_part_1(data: DataType) -> int:
     return total
 
 
-def solve_part_2(data: DataType) -> int:
-    return 0
+def solve_part_2(data: DataType) -> None:
+    register = 1
+    clock = 0
+    for instruction in data:
+        match instruction.split():
+            case ["noop"]:
+                clock += 1
+                end_of_cycle(clock, register)
+            case ["addx", value]:
+                clock += 1
+                end_of_cycle(clock, register)
+                clock += 1
+                end_of_cycle(clock, register)
+                register += int(value)
+
+
+def end_of_cycle(clock: int, register: int) -> None:
+    if (clock % 40 - 1) in sprite_indices(register):
+        char = "#"
+    else:
+        char = "."
+    if clock % 40 == 0:
+        end = "\n"
+    else:
+        end = ""
+    print(char, end=end)
+
+
+def sprite_indices(register: int) -> tuple[int, int, int]:
+    return register - 1, register, register + 1
 
 
 if __name__ == "__main__":
     main("inputs/day10-test1", expected_part_1=13140)
-    main("inputs/day10")
+    main("inputs/day10", expected_part_1=12560)
