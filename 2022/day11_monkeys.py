@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+from math import lcm
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -8,14 +9,15 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
     with open(filename) as f:
         data = f.read().strip().split("\n\n")
 
-    data = parse_data(data)
-    solution_part_1 = solve_part_1(data)
+    data_1 = parse_data(data)
+    solution_part_1 = solve_part_1(data_1)
 
     print(f"1. Found {solution_part_1}")
     if expected_part_1:
         assert expected_part_1 == solution_part_1
 
-    solution_part_2 = solve_part_2(data)
+    data_2 = parse_data(data)
+    solution_part_2 = solve_part_2(data_2)
     print(f"2. Found {solution_part_2}")
     if expected_part_2:
         assert expected_part_2 == solution_part_2
@@ -27,13 +29,17 @@ class Operation:
     adder: int = 0
     square: bool = False
 
-    def compute(self, value: int) -> int:
+    def compute(self, value: int, worry_decreases: bool, divider: int) -> int:
         if self.square:
             value = value * value
         else:
             value = value * self.multiplier + self.adder
 
-        return int(value / 3)
+        if worry_decreases:
+            value = int(value / divider)
+        else:
+            value %= divider
+        return value
 
 
 @dataclasses.dataclass
@@ -80,10 +86,10 @@ class Monkey:
         game.monkeys.append(monkey)
         return monkey
 
-    def play_round(self) -> None:
+    def play_round(self, worry_decreases: bool) -> None:
         self.inspected_items += len(self.items)
         for item in self.items:
-            new_value = self.operation.compute(item)
+            new_value = self.operation.compute(item, worry_decreases, self.game.divider)
             if new_value % self.divisible_by == 0:
                 self.throw(self.true_monkey, new_value)
             else:
@@ -100,10 +106,11 @@ class Monkey:
 @dataclasses.dataclass
 class Game:
     monkeys: list[Monkey] = dataclasses.field(default_factory=list)
+    divider: int = 3
 
-    def play_round(self) -> None:
+    def play_round(self, worry_decreases: bool) -> None:
         for monkey in self.monkeys:
-            monkey.play_round()
+            monkey.play_round(worry_decreases)
 
     def get_ranked_monkeys(self) -> list[Monkey]:
         return sorted(
@@ -116,27 +123,28 @@ class Game:
             monkey.print()
 
 
-DataType = Game
-
-
-def parse_data(data: list[str]) -> DataType:
+def parse_data(data: list[str]) -> Game:
     game = Game()
     for text in data:
         Monkey.from_input(text, game)
     return game
 
 
-def solve_part_1(game: DataType) -> int:
+def solve_part_1(game: Game) -> int:
     for _ in range(1, 21):
-        game.play_round()
+        game.play_round(worry_decreases=True)
     sorted_monkeys = game.get_ranked_monkeys()
     return sorted_monkeys[0].inspected_items * sorted_monkeys[1].inspected_items
 
 
-def solve_part_2(data: DataType) -> int:
-    return 0
+def solve_part_2(game: Game) -> int:
+    game.divider = lcm(*(monkey.divisible_by for monkey in game.monkeys))
+    for _ in range(1, 10_001):
+        game.play_round(worry_decreases=False)
+    sorted_monkeys = game.get_ranked_monkeys()
+    return sorted_monkeys[0].inspected_items * sorted_monkeys[1].inspected_items
 
 
 if __name__ == "__main__":
-    main("inputs/day11-test1", expected_part_1=10605)
-    main("inputs/day11", expected_part_1=95472)
+    main("inputs/day11-test1", expected_part_1=10605, expected_part_2=2713310158)
+    main("inputs/day11", expected_part_1=95472, expected_part_2=17926061332)
