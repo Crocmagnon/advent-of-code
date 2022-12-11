@@ -16,3 +16,4 @@ fi
 mkdir -p inputs
 touch inputs/day$1
 touch inputs/day$1-test1
+git add "inputs/day$1*" $filename

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
     print(f"\n+ Running on {filename}")
     with open(filename) as f:
