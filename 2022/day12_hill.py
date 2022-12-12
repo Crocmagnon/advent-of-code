@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import math
 
 import networkx as nx
 from networkx.algorithms.shortest_paths.generic import shortest_path
@@ -43,6 +44,7 @@ class Hill:
     end: Cell
     width: int
     height: int
+    potential_starters: list[Cell]
     graph: nx.DiGraph = None
 
     def top(self, cell: Cell) -> Cell | None:
@@ -97,6 +99,7 @@ def parse_data(data: list[str]) -> DataType:
     end_cell = None
     height = len(data)
     width = len(data[0])
+    potential_starters = []
     for y, row in enumerate(data):
         for x, char in enumerate(row):
             start, end = False, False
@@ -113,7 +116,9 @@ def parse_data(data: list[str]) -> DataType:
             elif end:
                 end_cell = cell
             cells.append(cell)
-    hill = Hill(cells, start_cell, end_cell, width, height)
+            if char == "a":
+                potential_starters.append(cell)
+    hill = Hill(cells, start_cell, end_cell, width, height, potential_starters)
     hill.build_graph()
     return hill
 
@@ -124,9 +129,18 @@ def solve_part_1(data: DataType) -> int:
 
 
 def solve_part_2(data: DataType) -> int:
-    return 0
+    min_length = math.inf
+    for candidate in data.potential_starters:
+        try:
+            path = shortest_path(data.graph, candidate, data.end)
+            path_length = len(path)
+        except nx.NetworkXNoPath:
+            path_length = math.inf
+        if path_length < min_length:
+            min_length = path_length
+    return min_length - 1
 
 
 if __name__ == "__main__":
-    main("inputs/day12-test1", expected_part_1=31)
-    main("inputs/day12", expected_part_1=456)
+    main("inputs/day12-test1", expected_part_1=31, expected_part_2=29)
+    main("inputs/day12", expected_part_1=456, expected_part_2=454)
