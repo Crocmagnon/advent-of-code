@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+from functools import cmp_to_key
 
 
 def main(filename: str, expected_part_1: int = None, expected_part_2: int = None):
@@ -69,10 +70,27 @@ def lower_than(left: list, right: list) -> bool | None:  # noqa: C901
     return len(left) < len(right)
 
 
+def cmp(left: list, right: list) -> int:
+    if lower_than(left, right):
+        return -1
+    else:
+        return 1
+
+
 def solve_part_2(data: DataType) -> int:
-    return 0
+    dividers = [[[2]], [[6]]]
+    packets = dividers[::]
+    for left, right in data:
+        packets.append(left)
+        packets.append(right)
+    packets.sort(key=cmp_to_key(cmp))
+    indices = []
+    for index, packet in enumerate(packets):
+        if packet in dividers:
+            indices.append(index + 1)
+    return indices[0] * indices[1]
 
 
 if __name__ == "__main__":
-    main("inputs/day13-test1", expected_part_1=13)
-    main("inputs/day13", expected_part_1=5503)
+    main("inputs/day13-test1", expected_part_1=13, expected_part_2=140)
+    main("inputs/day13", expected_part_1=5503, expected_part_2=20952)
