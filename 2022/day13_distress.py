@@ -43,7 +43,7 @@ def solve_part_1(data: DataType) -> int:
     return total
 
 
-def lower_than(left: list, right: list) -> bool | None:
+def lower_than(left: list, right: list) -> bool | None:  # noqa: C901
     """True if left is lower than right."""
     for left_item, right_item in zip(left, right):
         if isinstance(left_item, int) and isinstance(right_item, int):
