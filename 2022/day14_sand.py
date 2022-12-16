@@ -13,7 +13,7 @@ def main(filename: str, expected_part_1: int = None, expected_part_2: int = None
     if expected_part_1:
         assert expected_part_1 == solution_part_1
 
-    solution_part_2 = solve_part_2(data)
+    solution_part_2 = solve_part_2(data, deepest_wall)
     print(f"2. Found {solution_part_2}")
     if expected_part_2:
         assert expected_part_2 == solution_part_2
@@ -55,30 +55,74 @@ def parse_data(data: list[str]) -> Walls:
 
 
 def solve_part_1(walls: Walls, deepest_wall: int) -> int:
-    sand_source = (500, 0)
     sand: Walls = set()
     while True:
-        sand_x, sand_y = sand_source
-        while sand_y < deepest_wall:
-            if (sand_x, sand_y + 1) not in walls | sand:
-                sand_y += 1
-            elif (sand_x - 1, sand_y + 1) not in walls | sand:
-                sand_x -= 1
-                sand_y += 1
-            elif (sand_x + 1, sand_y + 1) not in walls | sand:
-                sand_x += 1
-                sand_y += 1
-            else:
-                sand.add((sand_x, sand_y))
-                break
+        sand_x, sand_y = compute_final_position(walls, sand, deepest_wall)
         if sand_y >= deepest_wall:
+            print_grid(493, 503, 10, walls, sand)
             return len(sand)
+        sand.add((sand_x, sand_y))
 
 
-def solve_part_2(walls: Walls) -> int:
-    return 0
+def compute_final_position(
+    walls: Walls, sand: Walls, deepest_wall: int, floor_level: int | None = None
+) -> Point:
+    sand_x, sand_y = 500, 0
+    while sand_y < deepest_wall:
+        floor: Walls = set()
+        if floor_level:
+            floor = {
+                (sand_x - 1, floor_level),
+                (sand_x, floor_level),
+                (sand_x + 1, floor_level),
+            }
+        if (sand_x, sand_y + 1) not in walls | sand | floor:
+            sand_y += 1
+        elif (sand_x - 1, sand_y + 1) not in walls | sand | floor:
+            sand_x -= 1
+            sand_y += 1
+        elif (sand_x + 1, sand_y + 1) not in walls | sand | floor:
+            sand_x += 1
+            sand_y += 1
+        else:
+            return sand_x, sand_y
+    return sand_x, sand_y
+
+
+def print_grid(
+    min_x: int,
+    max_x: int,
+    max_y: int,
+    walls: Walls,
+    sand: Walls,
+    floor_level: int | None = None,
+) -> None:
+    for y in range(0, max_y + 1):
+        for x in range(min_x, max_x + 1):
+            if (x, y) == (500, 0):
+                print("+", end="")
+            elif y == floor_level:
+                print("#", end="")
+            elif (x, y) in walls:
+                print("#", end="")
+            elif (x, y) in sand:
+                print("o", end="")
+            else:
+                print(".", end="")
+        print()
+
+
+def solve_part_2(walls: Walls, deepest_wall: int) -> int:
+    sand: Walls = set()
+    sand_x, sand_y = 0, 0
+    while (sand_x, sand_y) != (500, 0):
+        sand_x, sand_y = compute_final_position(
+            walls, sand, deepest_wall + 2, deepest_wall + 2
+        )
+        sand.add((sand_x, sand_y))
+    return len(sand)
 
 
 if __name__ == "__main__":
-    main("inputs/day14-test1", expected_part_1=24)
+    main("inputs/day14-test1", expected_part_1=24, expected_part_2=93)
     main("inputs/day14", expected_part_1=843)
