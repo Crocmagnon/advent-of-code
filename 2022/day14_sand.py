@@ -125,4 +125,5 @@ def solve_part_2(walls: Walls, deepest_wall: int) -> int:
 
 if __name__ == "__main__":
     main("inputs/day14-test1", expected_part_1=24, expected_part_2=93)
-    main("inputs/day14", expected_part_1=843)
+    main("inputs/day14", expected_part_1=843, expected_part_2=27625)
+    # part 2 "only" took 43 minutes 32s on my M1 Pro MacBook Pro.
