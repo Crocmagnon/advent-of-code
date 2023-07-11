@@ -18,7 +18,7 @@ repos:
           - --markdown-linebreak-ext=md
         exclude: ^2022/inputs/day05
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.8.0
+    rev: v3.9.0
     hooks:
       - id: pyupgrade
         args: [--py311-plus]
@@ -28,7 +28,7 @@ repos:
       - id: isort
         args: [--profile, black]
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.7.0
     hooks:
       - id: black
         args: [--target-version, py310]
