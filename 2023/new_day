@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euxo pipefail
+
+if [[ $# -ne 2 ]]; then
+    >&2 echo "Usage: $0 <number> <name>"
+    exit 2
+fi
+
+filename=day$1_$2
+cp template.go $filename.go
+cp template_test.go $filename_test.go
+if [ "$(uname -s)" == "Linux" ]; then
+    sed -e "s/Dxx/day$1/g" -i ./$filename.go
+    sed -e "s/Dxx/day$1/g" -i ./$filename_test.go
+    sed -e "s/dayxx/day$1/g" -i ./$filename_test.go
+else
+    sed -e "s/Dxx/day$1/g" -i "" ./$filename.go
+    sed -e "s/Dxx/day$1/g" -i "" ./$filename_test.go
+    sed -e "s/dayxx/day$1/g" -i "" ./$filename_test.go
+fi
+mkdir -p inputs
+touch inputs/day$1
+touch inputs/day$1_test1
+touch inputs/day$1_test2
+git add "inputs/day$1*" $filename

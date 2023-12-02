@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func Part1(input io.Reader) (int, error) {
+func D01Part1(input io.Reader) (int, error) {
 	scanner := bufio.NewScanner(input)
 	sum := 0
 
@@ -38,7 +38,7 @@ func Part1(input io.Reader) (int, error) {
 	return sum, nil
 }
 
-func Part2(input io.Reader) (int, error) {
+func D01Part2(input io.Reader) (int, error) {
 	reg, err := regexp.Compile(`[0-9]|one|two|three|four|five|six|seven|eight|nine`)
 	if err != nil {
 		return 0, err
