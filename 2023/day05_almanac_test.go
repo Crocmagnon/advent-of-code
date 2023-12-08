@@ -26,10 +26,38 @@ func TestDay05Part1(t *testing.T) {
 
 func TestDay05Part2(t *testing.T) {
 	tests := []testCase{
-		{"inputs/day05_test2", 0},
-		{"inputs/day05", 0},
+		{"inputs/day05_test2", 46},
+		{"inputs/day05", 78775051},
 	}
 	for _, test := range tests {
 		t.Run(test.filename, check(test, Day05Part2))
+	}
+}
+
+func TestDay05Ranges(t *testing.T) {
+	tests := []struct {
+		name      string
+		dRange    day05Range
+		seedRange day05SeedRange
+		expected  []day05SeedRange
+	}{
+		{
+			"seed included in range",
+			day05Range{0, 5, 5},
+			day05SeedRange{6, 8},
+			[]day05SeedRange{{1, 3}},
+		},
+		{
+			"range included in seed",
+			day05Range{0, 10, 2},
+			day05SeedRange{9, 13},
+			[]day05SeedRange{{0, 2}, {9, 10}, {12, 13}},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := day05Map{test.dRange}.convertRange(test.seedRange)
+			assert.Equal(t, test.expected, got)
+		})
 	}
 }
