@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"io"
 	"slices"
-	"strconv"
 	"strings"
 )
 
@@ -103,19 +102,6 @@ func parseSeedRanges(ints []int) []day05SeedRange {
 // start is included, end is not.
 type day05SeedRange struct {
 	start, end int
-}
-
-func lineToInts(line string) []int {
-	values := strings.Split(line, " ")
-	ints := make([]int, len(values))
-	for i, value := range values {
-		number, err := strconv.Atoi(value)
-		if err != nil {
-			panic(err)
-		}
-		ints[i] = number
-	}
-	return ints
 }
 
 type day05Range struct {
