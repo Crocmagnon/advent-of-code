@@ -22,7 +22,7 @@ func TestDay07Part2(t *testing.T) {
 	tests := []testCase{
 		{"inputs/day07_test1", 5905},
 		{"inputs/day07_test2", 5911},
-		{"inputs/day07", 0}, // 247974245 is too low
+		{"inputs/day07", 248256639},
 	}
 	for _, test := range tests {
 		t.Run(test.filename, check(test, Day07Part2))
@@ -64,6 +64,7 @@ func TestDay07HandValueP2(t *testing.T) {
 		hand     string
 		expected int
 	}{
+		{"JJJJJ", d07HandFive},
 		{"AAAAA", d07HandFive},
 		{"AAJJJ", d07HandFive},
 		{"AAAA2", d07HandFour},
@@ -155,6 +156,14 @@ func TestD07CmpHandsP2(t *testing.T) {
 		},
 		{
 			args: args{"QQQQ2", "JKKK2"},
+			want: 1,
+		},
+		{
+			args: args{"QQQQ2", "JJJJJ"},
+			want: -1,
+		},
+		{
+			args: args{"22222", "JJJJJ"},
 			want: 1,
 		},
 	}

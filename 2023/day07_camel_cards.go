@@ -36,14 +36,6 @@ func newD07Hand(hand string, bid int) d07Hand {
 	}
 }
 
-func newD07HandP2(hand string, bid int) d07Hand {
-	return d07Hand{
-		hand:  hand,
-		bid:   bid,
-		value: d07HandValueP2(hand),
-	}
-}
-
 func Day07Part1(input io.Reader) (int, error) {
 	scanner := bufio.NewScanner(input)
 
@@ -153,11 +145,19 @@ func Day07Part2(input io.Reader) (int, error) {
 	return sum, nil
 }
 
+func newD07HandP2(hand string, bid int) d07Hand {
+	return d07Hand{
+		hand:  hand,
+		bid:   bid,
+		value: d07HandValueP2(hand),
+	}
+}
+
 func d07HandValueP2(hand string) int {
 	count := make(map[rune]byte)
-	var maxCount byte = 1
+	var maxCount byte = 0
 	var maxFor rune
-	var secondMax byte = 1
+	var secondMax byte = 0
 	for _, c := range hand {
 		v := count[c]
 		v++
