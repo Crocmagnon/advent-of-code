@@ -17,8 +17,8 @@ func TestDay08Part1(t *testing.T) {
 
 func TestDay08Part2(t *testing.T) {
 	tests := []testCase{
-		{"inputs/day08_test2", 0},
-		{"inputs/day08", 0},
+		{"inputs/day08_test3", 6},
+		{"inputs/day08", 14265111103729},
 	}
 	for _, test := range tests {
 		t.Run(test.filename, check(test, Day08Part2))
