@@ -18,7 +18,7 @@ func Day06Part1(input io.Reader) (int, error) {
 	margin := 1
 
 	for i := 0; i < len(times); i++ {
-		x1, x2 := zeros(times[i], distances[i])
+		x1, x2 := day06Zeros(times[i], distances[i])
 		if distance(x1, times[i]) <= distances[i] {
 			x1++
 		}
@@ -28,7 +28,7 @@ func Day06Part1(input io.Reader) (int, error) {
 	return margin, nil
 }
 
-func zeros(time, distance int) (int, int) {
+func day06Zeros(time, distance int) (int, int) {
 	t, d := float64(time), float64(distance)
 	delta := math.Sqrt(math.Pow(t, 2) - 4*d)
 	return int(math.Ceil((t - delta) / 2)), int(math.Ceil((t + delta) / 2))
@@ -49,7 +49,7 @@ func Day06Part2(input io.Reader) (int, error) {
 	margin := 1
 
 	for i := 0; i < len(times); i++ {
-		x1, x2 := zeros(times[i], distances[i])
+		x1, x2 := day06Zeros(times[i], distances[i])
 		if distance(x1, times[i]) <= distances[i] {
 			x1++
 		}
