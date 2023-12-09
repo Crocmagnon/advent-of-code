@@ -7,6 +7,11 @@ import (
 	"testing"
 )
 
+type testCase struct {
+	filename string
+	want     int
+}
+
 func check(test testCase, fn solveFunc) func(t *testing.T) {
 	return func(t *testing.T) {
 		file, err := os.Open(test.filename)

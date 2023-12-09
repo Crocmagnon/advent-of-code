@@ -2,7 +2,6 @@ package _023
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"math"
 	"strings"
@@ -15,7 +14,6 @@ func Day06Part1(input io.Reader) (int, error) {
 	times := lineToInts(strings.TrimPrefix(scanner.Text(), "Time:"))
 	scanner.Scan()
 	distances := lineToInts(strings.TrimPrefix(scanner.Text(), "Distance:"))
-	fmt.Println(times, distances)
 
 	margin := 1
 
@@ -47,7 +45,6 @@ func Day06Part2(input io.Reader) (int, error) {
 	times := lineToInts(strings.ReplaceAll(strings.TrimPrefix(scanner.Text(), "Time:"), " ", ""))
 	scanner.Scan()
 	distances := lineToInts(strings.ReplaceAll(strings.TrimPrefix(scanner.Text(), "Distance:"), " ", ""))
-	fmt.Println(times, distances)
 
 	margin := 1
 
